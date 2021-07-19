@@ -2,6 +2,15 @@ package com.neueda.shortener.helper;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * Generic Response Class to create API reponse of URL Shortener Application
+ * @author sid
+ *
+ * @param statusCode - status code of API response
+ * @param responseMessage - response message of API
+ * @param responsePayload - payload that contains response for the query
+ */
+
 public class ShortenerRestResponse<E> {
 	private HttpStatus statusCode;
 	private String responseMessage;

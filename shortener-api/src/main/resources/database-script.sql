@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS URL;
 
+-- creates the URL table for the application in H2 database
 CREATE TABLE URL (
 	ID INT AUTO_INCREMENT PRIMARY KEY,
 	FULL_URL VARCHAR(600) NOT NULL,

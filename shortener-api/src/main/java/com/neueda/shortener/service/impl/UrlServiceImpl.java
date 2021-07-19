@@ -9,6 +9,12 @@ import com.neueda.shortener.dao.UrlRepository;
 import com.neueda.shortener.entity.Url;
 import com.neueda.shortener.service.UrlService;
 
+/** 
+ * Implementation of URL Shortener Service interface
+ * @author sid
+ *
+ */
+
 @Service
 public class UrlServiceImpl implements UrlService {
 	
@@ -18,25 +24,30 @@ public class UrlServiceImpl implements UrlService {
 		this.urlRepository = urlRepository;
 	}
 	
+	/** 
+	 * Service to fetch all the urls from database using URL Jpa repository
+	 */
 	public List<Url> findAll() {
 		return urlRepository.findAll();
 	}
 
-	public Url findById(int id) {
-		Optional<Url> optionalUrl = urlRepository.findById(id);
-		Url urlObject = null;
-		if (optionalUrl.isPresent()) {
-			urlObject = optionalUrl.get();
-		} else {
-			throw new RuntimeException("unrecogonized url - " + id);
-		}
-		return urlObject;
-	}
+	/**
+	 * Gets the URL object for the given short url code
+	 */
 	
 	public Url findByShortUrlCode(String code) {
 		return urlRepository.findByShortUrlCode(code);
 	}
 
+	/**
+	 * Saves the URL object
+	 * 
+	 * Logic:
+	 * Checks if the URL object for the full url is present
+	 * If yes, gets the url object from database
+	 * If no, saves the url object and returns back the same object.
+	 */
+	
 	public Url save(Url urlObject) {
 		Url url = urlRepository.findByFullUrl(urlObject.getFullUrl());
 		if (url == null) {
@@ -45,10 +56,6 @@ public class UrlServiceImpl implements UrlService {
 		} else {
 			return url;
 		}
-	}
-
-	public void deleteById(int id) {
-		urlRepository.deleteById(id);
 	}
 
 }

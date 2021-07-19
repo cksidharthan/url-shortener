@@ -10,6 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
+
+/** 
+ * URL Class that is mapped with the URL table in H2 Database
+ * @author sid
+ *
+ */
 
 @Entity
 @Table(name="URL")
@@ -19,13 +26,15 @@ public class Url implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID", nullable = false, unique = true)
-	@JsonIgnore
+	@NotNull
 	private Integer id;
 	
 	@Column(name="FULL_URL")
+	@NotNull
 	private String fullUrl;
 	
 	@Column(name="SHORT_URL_STRING")
+	@NotNull
 	private String shortUrlString;
 	
 	public Url() {

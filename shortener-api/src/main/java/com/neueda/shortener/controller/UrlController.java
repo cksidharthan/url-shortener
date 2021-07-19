@@ -21,6 +21,14 @@ import com.neueda.shortener.entity.Url;
 import com.neueda.shortener.helper.ShortenerRestResponse;
 import com.neueda.shortener.service.UrlService;
 
+/**
+ * 
+ * @author Sidharthan
+ * 
+ * Controller file to serve requests for URL Shortener Application
+ *
+ */
+
 @RestController
 @CrossOrigin
 @RequestMapping("url")
@@ -35,6 +43,13 @@ public class UrlController {
 		this.urlService = urlService;
 	}
 
+	/**
+	 * Get Method 
+	 * Returns the list of all URLs available in the database along with their Short URL Strings
+	 * 
+	 * @return URL list in database
+	 */
+	
 	@GetMapping(path = "/all", produces = "application/json")
 	public ShortenerRestResponse<List<Url>> findAll() {
 		try {
@@ -55,6 +70,14 @@ public class UrlController {
 
 	}
 
+	/**
+	 * Get Method 
+	 * Gets the Short URL Code from UI 
+	 * Redirects the user to the Full URL
+	 *  
+	 * @return Redirects to the Full URL Page
+	 */
+	
 	@GetMapping(path = "/{url_code}", produces = "application/json")
 	public RedirectView getUrlbyCode(@PathVariable String url_code) {
 		RedirectView redirectView = new RedirectView();
@@ -68,6 +91,16 @@ public class UrlController {
 		}
 		return redirectView;
 	}
+	
+	/**
+	 * Post Method 
+	 * Gets the URL object containing the full url
+	 * Generates Short URL Code for the URL specified
+	 * Saves the URL object
+	 * Returns the URL object with the Shortcode generated
+	 *  
+	 * @return URL object with full url and short url code
+	 */
 
 	@PostMapping(path = "/", produces = "application/json")
 	public ShortenerRestResponse<Url> addUrl(@RequestBody Url urlObject) throws Exception {
@@ -86,19 +119,5 @@ public class UrlController {
 		}
 		return new ShortenerRestResponse<Url>(HttpStatus.OK, "URL added", urlSaved);
 	}
-
-	@DeleteMapping(value = "/{url_id}", produces = "application/json")
-	public ShortenerRestResponse<String> deleteUById(@PathVariable int url_id) {
-		try {
-			urlService.deleteById(url_id);
-			logger.info("url deleted ");
-			return new ShortenerRestResponse<String>(HttpStatus.OK, "URL deleted", "URL Deleted from database");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return new ShortenerRestResponse<String>(HttpStatus.INTERNAL_SERVER_ERROR, "Error Occured",
-					"No Records Deleted");
-		}
-
-	}
-
+	
 }
