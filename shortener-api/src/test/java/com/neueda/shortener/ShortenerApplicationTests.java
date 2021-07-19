@@ -1,34 +1,34 @@
 package com.neueda.shortener;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.neueda.shortener.dao.UrlRepository;
 import com.neueda.shortener.entity.Url;
 import com.neueda.shortener.helper.ShortenerRestResponse;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
+import com.neueda.shortener.service.impl.UrlServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ExtendWith(MockitoExtension.class)
 public class ShortenerApplicationTests {
 
 	@Autowired
@@ -36,6 +36,12 @@ public class ShortenerApplicationTests {
 
 	@Autowired
 	private UrlRepository urlRepository;
+	
+	@Mock
+	private UrlRepository urlRepository2;
+	
+	@InjectMocks
+	UrlServiceImpl urlService;
 
 	@Before
 	public void init() {
@@ -85,5 +91,18 @@ public class ShortenerApplicationTests {
 		assertEquals(body.getResponseMessage(), "URL added");
 	}
 	
+	@Test
+	public void whenShortCodeExistsRetunLongUrl() {
+		String shortCode="123";
+		Url url = new Url(1, "https://google.com", "123");
+		Mockito.when(urlRepository2.findByShortUrlCode(shortCode)).thenReturn(url);
+		assertEquals(url, urlService.findByShortUrlCode(shortCode));
+	}
+	
+	@Test
+	public void getUrlbyCodeTest() {
+		RedirectView body = this.restTemplate.getForObject("/url/123", RedirectView.class);
+		assertEquals(body, null);
+	}
 
 }
