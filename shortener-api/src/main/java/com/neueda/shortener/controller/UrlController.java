@@ -98,6 +98,8 @@ public class UrlController {
 	 * Generates Short URL Code for the URL specified
 	 * Saves the URL object
 	 * Returns the URL object with the Shortcode generated
+	 * 
+	 * Generates ShortUrl using RandomStringUtilsLibrary
 	 *  
 	 * @return URL object with full url and short url code
 	 */
@@ -109,7 +111,7 @@ public class UrlController {
 			if (!urlObject.getFullUrl().startsWith("http")) {
 				urlObject.setFullUrl("https://" + urlObject.getFullUrl());
 			}
-			String generatedString = RandomStringUtils.randomAlphanumeric(10);
+			String generatedString = RandomStringUtils.randomAlphanumeric(5) + RandomStringUtils.randomAlphanumeric(5);
 			urlObject.setShortUrlString(generatedString);
 			urlSaved = urlService.save(urlObject);
 			logger.info("url saved " + urlObject);
